@@ -21,13 +21,18 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.Future;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Slf4j
 @Configuration
+@AllArgsConstructor
 public class NettySocketServer {
+
+    private final RedisTemplate redisTemplate;
 
     // WebSocket端口
     public static final Integer WEB_SOCKET_PORT = 8090;
@@ -91,7 +96,7 @@ public class NettySocketServer {
                         pipeline.addLast("encode",new MessageProtocolEncoder());
                         pipeline.addLast("decode",new MessageProtocolDecoder());
                         // 自定义Handler 处理业务逻辑
-                        pipeline.addLast(new NettyWebSocketServerHandler());
+                        pipeline.addLast(new NettyWebSocketServerHandler(redisTemplate));
                     }
                 });
         //启动服务器

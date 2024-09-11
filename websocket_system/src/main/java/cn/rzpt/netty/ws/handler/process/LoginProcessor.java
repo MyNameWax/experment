@@ -45,7 +45,7 @@ public class LoginProcessor extends AbstractMessageProcessor<WsLoginInfoReq> {
             log.info("用户登录失败,token={}", token);
             WSBaseResponse baseResponse = WSBaseResponse.builder()
                     .type(1)
-                    .message("登录失败")
+                    .message("连接失败,请重新登陆")
                     .build();
             ctx.channel().writeAndFlush(baseResponse);
             return;
@@ -64,7 +64,7 @@ public class LoginProcessor extends AbstractMessageProcessor<WsLoginInfoReq> {
         // 响应ws
         WSBaseResponse baseResponse = WSBaseResponse.builder()
                 .type(WSReqTypeEnum.LOGIN.getType())
-                .message("与服务器建立连接成功")
+                .message("成功与通讯服务建立连接")
                 .build();
         ctx.channel().writeAndFlush(baseResponse).addListener((ChannelFutureListener) future -> {
             if (!future.isSuccess()) {

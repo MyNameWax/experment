@@ -11,14 +11,18 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Objects;
 
 @Slf4j
+@AllArgsConstructor
 public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<WSBaseInfo> {
 
+    private final RedisTemplate redisTemplate;
 
     /**
      * 读取到消息后进行处理
@@ -71,7 +75,10 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<WSB
             UserChannelCtxMap.removeChannelCtx(userId);
             // TODO 用户下线（就是把当前在线用户下线（踢下去的是系统用户,而不是ws连接用户））
             // TODO 这里通过Redis, 把当前用户数据删除下线。在用户连接时,重新添加数据
-
+            // TODO 这里是Login处理器的登录数据,并不是系统用户
+            String key = String.format("im:%s", userId);
+            redisTemplate.delete(key);
+            log.info("用户下线,userId:{}", userId);
 
         }
     }
