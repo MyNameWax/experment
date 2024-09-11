@@ -1,7 +1,7 @@
-package cn.rzpt.netty.handler.process;
+package cn.rzpt.netty.ws.handler.process;
 
 import cn.hutool.extra.spring.SpringUtil;
-import cn.rzpt.netty.enums.WSReqTypeEnum;
+import cn.rzpt.netty.ws.enums.WSReqTypeEnum;
 
 public class ProcessorFactory {
 

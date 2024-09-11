@@ -1,6 +1,6 @@
-package cn.rzpt.netty.ws.endecode;
+package cn.rzpt.netty.ws.handler.encoder;
 
-import cn.rzpt.netty.ws.request.WSBaseInfo;
+import cn.rzpt.netty.ws.model.request.WSBaseInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;

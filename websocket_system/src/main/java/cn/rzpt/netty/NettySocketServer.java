@@ -1,8 +1,8 @@
 package cn.rzpt.netty;
 
-import cn.rzpt.netty.handler.NettyWebSocketServerHandler;
-import cn.rzpt.netty.ws.endecode.MessageProtocolDecoder;
-import cn.rzpt.netty.ws.endecode.MessageProtocolEncoder;
+import cn.rzpt.netty.ws.handler.NettyWebSocketServerHandler;
+import cn.rzpt.netty.ws.handler.encoder.MessageProtocolDecoder;
+import cn.rzpt.netty.ws.handler.encoder.MessageProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -84,12 +84,12 @@ public class NettySocketServer {
                         // 以块方式写,添加ChunkedWriter处理器,支持大数据流
                         pipeline.addLast(new ChunkedWriteHandler());
                         // 对Http消息做聚合操作,产生两个对象,FullHttpRequest、FullHttpResponse
-                        pipeline.addLast(new HttpObjectAggregator(65535));
+                        pipeline.addLast(new HttpObjectAggregator(1024 * 60));
                         // WebSocket处理器
                         pipeline.addLast(new WebSocketServerProtocolHandler("/"));
                         // WebSocket自定义编解码处理器
-                        pipeline.addLast("encode", new MessageProtocolEncoder());
-                        pipeline.addLast("decode", new MessageProtocolDecoder());
+                        pipeline.addLast("encode",new MessageProtocolEncoder());
+                        pipeline.addLast("decode",new MessageProtocolDecoder());
                         // 自定义Handler 处理业务逻辑
                         pipeline.addLast(new NettyWebSocketServerHandler());
                     }

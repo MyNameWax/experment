@@ -1,11 +1,11 @@
-package cn.rzpt.netty.handler;
+package cn.rzpt.netty.ws.handler;
 
-import cn.rzpt.netty.constant.ChannelAttrKey;
-import cn.rzpt.netty.enums.WSReqTypeEnum;
-import cn.rzpt.netty.handler.process.AbstractMessageProcessor;
-import cn.rzpt.netty.handler.process.ProcessorFactory;
 import cn.rzpt.netty.ws.UserChannelCtxMap;
-import cn.rzpt.netty.ws.request.WSBaseInfo;
+import cn.rzpt.netty.ws.constant.ChannelAttrKey;
+import cn.rzpt.netty.ws.enums.WSReqTypeEnum;
+import cn.rzpt.netty.ws.handler.process.AbstractMessageProcessor;
+import cn.rzpt.netty.ws.handler.process.ProcessorFactory;
+import cn.rzpt.netty.ws.model.request.WSBaseInfo;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
@@ -64,15 +64,15 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<WSB
     public void handlerRemoved(ChannelHandlerContext ctx) {
         AttributeKey<Long> userIdAttr = AttributeKey.valueOf(ChannelAttrKey.USER_ID);
         Long userId = ctx.channel().attr(userIdAttr).get();
-        AttributeKey<Integer> terminalAttr = AttributeKey.valueOf(ChannelAttrKey.TERMINAL_TYPE);
-        Integer terminal = ctx.channel().attr(terminalAttr).get();
-        ChannelHandlerContext context = UserChannelCtxMap.getChannelCtx(userId, terminal);
+        ChannelHandlerContext context = UserChannelCtxMap.getChannelCtx(userId);
         // 判断一下 避免异地登录导致的误删
         if (Objects.nonNull(context) && ctx.channel().id().equals(context.channel().id())) {
             // 移除channel
-            UserChannelCtxMap.removeChannelCtx(userId, terminal);
-            // TODO 用户下线（就是把当前在线用户T下线）
-            log.info("断开连接,userId={},终端类型:{},{}", userId, terminal, ctx.channel().id().asLongText());
+            UserChannelCtxMap.removeChannelCtx(userId);
+            // TODO 用户下线（就是把当前在线用户下线（踢下去的是系统用户,而不是ws连接用户））
+            // TODO 这里通过Redis, 把当前用户数据删除下线。在用户连接时,重新添加数据
+
+
         }
     }
 
@@ -91,9 +91,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<WSB
                 // 在规定时间内没有收到客户端的上行数据,主动断开连接
                 AttributeKey<Long> attr = AttributeKey.valueOf("USER_ID");
                 Long userId = ctx.channel().attr(attr).get();
-                AttributeKey<Integer> terminalAttr = AttributeKey.valueOf(ChannelAttrKey.TERMINAL_TYPE);
-                Integer terminal = ctx.channel().attr(terminalAttr).get();
-                log.info("心跳超时,即将断开连接,用户id:{},终端类型:{}", userId, terminal);
+                log.info("心跳超时,即将断开连接,用户id:{}", userId);
                 ctx.channel().close();
             }
         } else {

@@ -1,4 +1,4 @@
-package cn.rzpt.netty.enums;
+package cn.rzpt.netty.ws.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

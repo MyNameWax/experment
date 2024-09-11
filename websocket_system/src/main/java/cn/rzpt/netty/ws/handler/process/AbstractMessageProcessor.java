@@ -1,4 +1,4 @@
-package cn.rzpt.netty.handler.process;
+package cn.rzpt.netty.ws.handler.process;
 
 import io.netty.channel.ChannelHandlerContext;
 

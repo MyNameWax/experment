@@ -1,4 +1,4 @@
-package cn.rzpt.netty.ws.request;
+package cn.rzpt.netty.ws.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WsLoginInfoReq {
 
-    private String accessKey;
+    private Long userId;
 
 
 }

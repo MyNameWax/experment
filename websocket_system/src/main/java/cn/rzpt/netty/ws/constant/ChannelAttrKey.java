@@ -1,4 +1,4 @@
-package cn.rzpt.netty.constant;
+package cn.rzpt.netty.ws.constant;
 
 import org.springframework.context.annotation.Primary;
 
