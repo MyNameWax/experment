@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rzpt.mapper.MessageNotificationMapper">
+
+
+    <insert id="insert" parameterType="cn.rzpt.model.po.MessageNotification">
+        insert into message_notification(user_id, to_user_id, notice_type, notice_content, read_target, process_result)
+        values (#{userId}, #{toUserId}, #{noticeType}, #{noticeContent}, #{readTarget}, #{processResult})
+    </insert>
+    <select id="queryAlwaysAdd" resultType="java.lang.Long">
+        select count(id)
+        from message_notification
+        where user_id = #{userId}
+          and to_user_id = #{targetId}
+          and notice_type = 3
+    </select>
+</mapper>
