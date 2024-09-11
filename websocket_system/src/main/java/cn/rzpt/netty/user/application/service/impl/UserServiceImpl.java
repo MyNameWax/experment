@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         map.put("userId", user.getId());
         String token = JWTUtil.createToken(map, "1234".getBytes());
         redisTemplate.opsForValue().set(user.getId().toString(), token, 60 * 60L, TimeUnit.MINUTES);
-        return token;
+        return user.getId().toString();
     }
 
     private void checkUserLoginReqParams(UserLoginReq userLoginReq) {
