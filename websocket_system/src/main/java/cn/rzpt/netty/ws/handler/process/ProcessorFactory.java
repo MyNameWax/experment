@@ -14,6 +14,7 @@ public class ProcessorFactory {
             case CHAT:
             case AUTHORIZE:
             case HEARTBEAT:
+                processor = SpringUtil.getBean(HeartBeatProcessor.class);
             default:
                 break;
         }
