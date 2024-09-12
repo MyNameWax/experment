@@ -6,7 +6,7 @@ import cn.hutool.jwt.JWTUtil;
 import cn.rzpt.netty.ws.UserChannelCtxMap;
 import cn.rzpt.netty.ws.constant.ChannelAttrKey;
 import cn.rzpt.netty.ws.enums.WSReqTypeEnum;
-import cn.rzpt.netty.ws.model.request.WsLoginInfoReq;
+import cn.rzpt.netty.ws.model.request.WSLoginInfoReq;
 import cn.rzpt.netty.ws.model.response.WSBaseResponse;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,12 +23,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class LoginProcessor extends AbstractMessageProcessor<WsLoginInfoReq> {
+public class LoginProcessor extends AbstractMessageProcessor<WSLoginInfoReq> {
 
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public void process(ChannelHandlerContext ctx, WsLoginInfoReq wsLoginInfoReq) {
+    public void process(ChannelHandlerContext ctx, WSLoginInfoReq wsLoginInfoReq) {
         log.info("用户登录,userId={}", wsLoginInfoReq);
         ChannelHandlerContext context = UserChannelCtxMap.getChannelCtx(wsLoginInfoReq.getUserId());
         if (Objects.nonNull(context)) {
@@ -40,7 +40,7 @@ public class LoginProcessor extends AbstractMessageProcessor<WsLoginInfoReq> {
             ctx.channel().writeAndFlush(baseResponse);
             return;
         }
-        String token = redisTemplate.opsForValue().get(wsLoginInfoReq.getUserId().toString());
+        String token = redisTemplate.opsForValue().get("user:" + wsLoginInfoReq.getUserId().toString());
         if (StrUtil.isEmpty(token) || !JWTUtil.verify(token, "1234".getBytes())) {
             log.info("用户登录失败,token={}", token);
             WSBaseResponse baseResponse = WSBaseResponse.builder()
@@ -74,8 +74,8 @@ public class LoginProcessor extends AbstractMessageProcessor<WsLoginInfoReq> {
     }
 
     @Override
-    public WsLoginInfoReq transForm(Object o) {
+    public WSLoginInfoReq transForm(Object o) {
         HashMap map = (HashMap) o;
-        return BeanUtil.fillBeanWithMap(map, new WsLoginInfoReq(), false);
+        return BeanUtil.fillBeanWithMap(map, new WSLoginInfoReq(), false);
     }
 }

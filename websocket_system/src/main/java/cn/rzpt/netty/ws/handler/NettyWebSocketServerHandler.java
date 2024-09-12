@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @AllArgsConstructor
@@ -93,7 +92,6 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<WSB
     @Override
     @SneakyThrows
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
-
         if (evt instanceof IdleStateEvent) {
             IdleState state = ((IdleStateEvent) evt).state();
             if (state == IdleState.READER_IDLE) {

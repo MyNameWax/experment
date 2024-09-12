@@ -3,6 +3,7 @@ package cn.rzpt.netty.user.application.service.impl;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.jwt.JWTUtil;
 import cn.rzpt.netty.user.application.req.UserLoginReq;
+import cn.rzpt.netty.user.application.resp.OnlineUserResp;
 import cn.rzpt.netty.user.application.service.UserService;
 import cn.rzpt.netty.user.domain.repository.IUserRepository;
 import cn.rzpt.netty.user.infrastructure.dao.entity.User;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final RedisTemplate<String,String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final IUserRepository userRepository;
 
     @Override
@@ -32,8 +34,13 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> map = new HashMap<>(1);
         map.put("userId", user.getId());
         String token = JWTUtil.createToken(map, "1234".getBytes());
-        redisTemplate.opsForValue().set(user.getId().toString(), token, 60 * 60L, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("user:" + user.getId().toString(), token, 60 * 60L, TimeUnit.MINUTES);
         return user.getId().toString();
+    }
+
+    @Override
+    public List<OnlineUserResp> onlineUser() {
+        return userRepository.onlineUser();
     }
 
     private void checkUserLoginReqParams(UserLoginReq userLoginReq) {

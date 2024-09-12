@@ -1,4 +1,4 @@
-package cn.rzpt.netty.ws.model.request;
+package cn.rzpt.netty.user.application.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WsLoginInfoReq {
+public class OnlineUserResp {
 
-    private Long userId;
+    private Long id;
 
+    private String username;
 
 }

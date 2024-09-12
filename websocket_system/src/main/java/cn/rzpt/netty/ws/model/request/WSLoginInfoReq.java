@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WsHeartBeatReq {
+public class WSLoginInfoReq {
 
     private Long userId;
-
 
 }

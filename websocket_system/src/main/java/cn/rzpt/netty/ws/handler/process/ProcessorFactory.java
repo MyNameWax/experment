@@ -12,9 +12,11 @@ public class ProcessorFactory {
                 processor = SpringUtil.getBean(LoginProcessor.class);
                 break;
             case CHAT:
-            case AUTHORIZE:
+                processor = SpringUtil.getBean(ChatProcessor.class);
+                break;
             case HEARTBEAT:
                 processor = SpringUtil.getBean(HeartBeatProcessor.class);
+                break;
             default:
                 break;
         }
