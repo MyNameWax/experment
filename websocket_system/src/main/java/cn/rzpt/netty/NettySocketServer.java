@@ -31,7 +31,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 @AllArgsConstructor
 public class NettySocketServer {
-
     private final RedisTemplate redisTemplate;
 
     // WebSocket端口
@@ -93,8 +92,8 @@ public class NettySocketServer {
                         // WebSocket处理器
                         pipeline.addLast(new WebSocketServerProtocolHandler("/"));
                         // WebSocket自定义编解码处理器
-                        pipeline.addLast("encode",new MessageProtocolEncoder());
-                        pipeline.addLast("decode",new MessageProtocolDecoder());
+                        pipeline.addLast("encode", new MessageProtocolEncoder());
+                        pipeline.addLast("decode", new MessageProtocolDecoder());
                         // 自定义Handler 处理业务逻辑
                         pipeline.addLast(new NettyWebSocketServerHandler(redisTemplate));
                     }
